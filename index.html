@@ -10,56 +10,42 @@
     <button onclick="startScanner()">Start Scanner</button>
     <video id="barcode-video" style="width: 100%; max-width: 400px;"></video>
     <p id="barcode-result">Scanned Barcode: <strong>None</strong></p>
-    <p id="error-message" style="color: red;"></p>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script>
-        async function startScanner() {
-            const videoElement = document.getElementById("barcode-video");
-            const errorMessage = document.getElementById("error-message");
-
-            // **Check camera permissions**
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                videoElement.srcObject = stream;
-                videoElement.play();
-            } catch (err) {
-                errorMessage.innerText = "Error: Camera access denied or unavailable.";
-                console.error("Camera error:", err);
-                return;
-            }
-
-            // **Start QuaggaJS**
+        function startScanner() {
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: videoElement, 
-                    constraints: {
-                        width: 640,
-                        height: 480,
-                        facingMode: "environment" // Rear camera
-                    }
+                    target: document.querySelector("#barcode-video"), 
+                    constraints: { facingMode: "environment" }
                 },
-                decoder: {
-                    readers: ["ean_reader", "upc_reader", "code_128_reader"]
-                },
-                locate: true
+                decoder: { readers: ["ean_reader", "upc_reader", "code_128_reader"] }
             }, function (err) {
                 if (err) {
-                    errorMessage.innerText = "Error: Failed to initialize scanner.";
-                    console.error("QuaggaJS error:", err);
+                    console.error(err);
                     return;
                 }
                 Quagga.start();
             });
 
-            // **Handle barcode detection**
             Quagga.onDetected(function (result) {
                 let barcode = result.codeResult.code;
                 document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${barcode}</strong>`;
 
-                // Show web notification
+                // ✅ Stop scanning immediately after detecting a barcode
+                Quagga.stop();
+
+                // ✅ Also stop the camera stream (for better performance)
+                let video = document.querySelector("#barcode-video");
+                if (video && video.srcObject) {
+                    let tracks = video.srcObject.getTracks();
+                    tracks.forEach(track => track.stop()); // Stop each track (video)
+                    video.srcObject = null;
+                }
+
+                // ✅ Show web notification
                 if (Notification.permission === "granted") {
                     new Notification("Barcode Scanned", { body: `Barcode: ${barcode}` });
                 } else if (Notification.permission !== "denied") {
@@ -69,8 +55,6 @@
                         }
                     });
                 }
-
-                Quagga.stop(); // Stop scanning after first detection
             });
         }
     </script>
