@@ -13,12 +13,33 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script>
-        function startScanner() {
+        let videoStream = null; // To keep track of the video stream
+
+        async function startScanner() {
+            // Ensure the camera is available
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }
+                });
+
+                // Set the stream to the video element to display the camera feed
+                const videoElement = document.getElementById("barcode-video");
+                videoElement.srcObject = stream;
+                videoElement.play();
+
+                // Store the video stream for later stopping
+                videoStream = stream;
+            } catch (err) {
+                console.error("Camera access denied or unavailable:", err);
+                return;
+            }
+
+            // Initialize Quagga to scan barcodes
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: document.querySelector("#barcode-video"), 
+                    target: document.querySelector("#barcode-video"),
                     constraints: { facingMode: "environment" }
                 },
                 decoder: { readers: ["ean_reader", "upc_reader", "code_128_reader"] }
@@ -27,9 +48,10 @@
                     console.error(err);
                     return;
                 }
-                Quagga.start();
+                Quagga.start(); // Start barcode scanning
             });
 
+            // Handle barcode detection
             Quagga.onDetected(function (result) {
                 let barcode = result.codeResult.code;
                 document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${barcode}</strong>`;
@@ -37,12 +59,10 @@
                 // ✅ Stop scanning immediately after detecting a barcode
                 Quagga.stop();
 
-                // ✅ Also stop the camera stream (for better performance)
-                let video = document.querySelector("#barcode-video");
-                if (video && video.srcObject) {
-                    let tracks = video.srcObject.getTracks();
-                    tracks.forEach(track => track.stop()); // Stop each track (video)
-                    video.srcObject = null;
+                // ✅ Stop the camera stream after detection (free resources)
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    document.getElementById("barcode-video").srcObject = null; // Close video feed
                 }
 
                 // ✅ Show web notification
