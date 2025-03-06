@@ -65,6 +65,10 @@
                     document.getElementById("barcode-video").srcObject = null; // Close video feed
                 }
 
+                // ✅ Clear the video element and hide it after stopping the stream
+                const videoElement = document.getElementById("barcode-video");
+                videoElement.style.display = 'none'; // Hide the video element completely
+
                 // ✅ Show web notification
                 if (Notification.permission === "granted") {
                     new Notification("Barcode Scanned", { body: `Barcode: ${barcode}` });
