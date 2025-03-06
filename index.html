@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Scanner</title>
+    <title>Barcode Scanner & Event Creator</title>
 </head>
 <body>
     <h1>Scan a Barcode</h1>
     <button onclick="startScanner()">Start Scanner</button>
     <video id="barcode-video" style="width: 100%; max-width: 400px;"></video>
     <p id="barcode-result">Scanned Barcode: <strong>None</strong></p>
+    <button id="create-event-btn" style="display: none;" onclick="createEvent()">Create an Event in Calendar</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script>
-        let videoStream = null; // To keep track of the video stream
+        let scannedBarcode = '';  // Store the scanned barcode number
 
         async function startScanner() {
             // Ensure the camera is available
@@ -26,9 +27,6 @@
                 const videoElement = document.getElementById("barcode-video");
                 videoElement.srcObject = stream;
                 videoElement.play();
-
-                // Store the video stream for later stopping
-                videoStream = stream;
             } catch (err) {
                 console.error("Camera access denied or unavailable:", err);
                 return;
@@ -54,32 +52,61 @@
             // Handle barcode detection
             Quagga.onDetected(function (result) {
                 let barcode = result.codeResult.code;
+                scannedBarcode = barcode;  // Store the scanned barcode number
                 document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${barcode}</strong>`;
 
                 // ✅ Stop scanning immediately after detecting a barcode
                 Quagga.stop();
 
-                // ✅ Stop the camera stream after detection (free resources)
+                // ✅ Show the "Create an Event" button
+                document.getElementById("create-event-btn").style.display = "inline-block";
+
+                // Stop the camera stream
+                const videoElement = document.getElementById("barcode-video");
+                const videoStream = videoElement.srcObject;
                 if (videoStream) {
                     videoStream.getTracks().forEach(track => track.stop());
-                    document.getElementById("barcode-video").srcObject = null; // Close video feed
-                }
-
-                // ✅ Clear the video element and hide it after stopping the stream
-                const videoElement = document.getElementById("barcode-video");
-                videoElement.style.display = 'none'; // Hide the video element completely
-
-                // ✅ Show web notification
-                if (Notification.permission === "granted") {
-                    new Notification("Barcode Scanned", { body: `Barcode: ${barcode}` });
-                } else if (Notification.permission !== "denied") {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === "granted") {
-                            new Notification("Barcode Scanned", { body: `Barcode: ${barcode}` });
-                        }
-                    });
+                    videoElement.srcObject = null; // Close video feed
                 }
             });
+        }
+
+        // Function to generate and download the ICS file for the event
+        function createEvent() {
+            const eventTitle = "Time for donuts";
+            const description = `Scanned Barcode: ${scannedBarcode}`;
+            const location = "Your Location";  // Add location if needed
+            const startDate = new Date();
+            startDate.setMinutes(startDate.getMinutes() + 2);  // Set the event time to 2 minutes later
+            const endDate = new Date(startDate);
+            endDate.setMinutes(endDate.getMinutes() + 30);  // Optional: Set event duration (e.g., 30 minutes)
+
+            const startDateString = startDate.toISOString().replace(/-|:|\.\d+/g, "");
+            const endDateString = endDate.toISOString().replace(/-|:|\.\d+/g, "");
+
+            const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:${eventTitle}
+DESCRIPTION:${description}
+LOCATION:${location}
+DTSTART:${startDateString}
+DTEND:${endDateString}
+BEGIN:VALARM
+TRIGGER:-PT10M  // Optional: Set reminder 10 minutes before event
+DESCRIPTION:Reminder for your event: ${eventTitle}
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+            `;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `event_time_for_donuts.ics`;
+            link.click();
         }
     </script>
 </body>
