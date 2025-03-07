@@ -78,6 +78,15 @@ async function startScanner() {
             videoStream.getTracks().forEach(track => track.stop());
             videoElement.srcObject = null;
         }
+
+        setTimeout(() => {
+            videoElement.remove(); // Remove the video element
+            const newVideoElement = document.createElement("video");
+            newVideoElement.id = "barcode-video";
+            newVideoElement.style.width = "100%";
+            newVideoElement.style.maxWidth = "400px";
+            document.body.appendChild(newVideoElement);
+        }, 100);
     });
 }
 
