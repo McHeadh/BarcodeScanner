@@ -52,3 +52,6 @@ END:VCALENDAR
 
     logMessage("✅ .ics file should have downloaded.");
 }
+
+logMessage("✅ Log system initialized.");
+
