@@ -1,17 +1,11 @@
-// Function to schedule an event based on the defrosting time
-function createEvent() {
-    if (!scannedProduct) {
-        console.log("No product scanned");
-        return;
-    }
+function scheduleEvent() {
+    // Get the time for the event (2 minutes from now)
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 2); // Event in 2 minutes
 
-    // Get the defrosting time from the scanned product
-    const defrostingTime = scannedProduct.hoursdefrosting;
-    const currentDate = new Date();
-    const eventTime = new Date(currentDate.getTime() + defrostingTime * 60 * 60 * 1000);  // Add defrosting time in hours
-
-    const title = `Defrosting Time for ${scannedProduct.name}`;
-    const description = `Barcode: ${scannedProduct.code}\nProduct: ${scannedProduct.name}`;
+    const title = "Time for donuts!";
+    const description = `Scanned Barcode: ${scannedBarcode}`;
+    const location = "Your Location";
 
     // Format the date as required by .ics (YYYYMMDDTHHMMSSZ)
     function formatDate(date) {
@@ -25,12 +19,10 @@ VERSION:2.0
 BEGIN:VEVENT
 SUMMARY:${title}
 DESCRIPTION:${description}
-DTSTART:${formatDate(eventTime)}
-DTEND:${formatDate(eventTime)}
-LOCATION:None
-STATUS:TENTATIVE
+DTSTART:${formatDate(now)}
+DTEND:${formatDate(now)}
 BEGIN:VALARM
-TRIGGER:-PT10M
+TRIGGER:-PT0M
 DESCRIPTION:${title}
 ACTION:DISPLAY
 END:VALARM
@@ -46,6 +38,4 @@ END:VCALENDAR
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    console.log("ICS event created and ready to be downloaded");
 }
