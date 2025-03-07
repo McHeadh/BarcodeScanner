@@ -49,9 +49,17 @@ async function startScanner() {
 
     Quagga.onDetected(function (result) {
         scannedBarcode = result.codeResult.code;
-        document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${scannedBarcode}</strong>`;
 
-        // Find the matching product from the barcode database
+        const barcodeContainer = document.getElementById("barcode-result");
+    
+        barcodeContainer.innerHTML = "Scanned Barcode: ";
+    
+        const barcodeValueElement = document.createElement("span");
+        barcodeValueElement.id = "scanned-barcode-value";
+        barcodeValueElement.textContent = scannedBarcode;
+    
+        barcodeContainer.appendChild(barcodeValueElement);
+    
         scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
 
         if (scannedProduct) {

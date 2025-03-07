@@ -1,11 +1,33 @@
+let barcodeDatabase = [];
+let scannedBarcode = '';
+let scannedProduct = null;
+
+async function loadBarcodeData() {
+    try {
+        const response = await fetch('codes.json');
+        if (!response.ok) {
+            throw new Error("Failed to load barcode data");
+        }
+        barcodeDatabase = await response.json();
+        console.log(barcodeDatabase);
+    } catch (error) {
+        console.error('Error loading barcode data:', error);
+    }
+}
+
 function scheduleEvent() {
-    // Get the time for the event (2 minutes from now)
+
+    loadBarcodeData();
+
+    scannedBarcode = document.getElementById("scanned-barcode-value").textContent;
+
+    scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
+
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 2); // Event in 2 minutes
+    now.setMinutes(now.getMinutes() + scannedProduct.hoursdefrosting);
 
     const title = "Time for donuts!";
     const description = `Scanned Barcode: ${scannedBarcode}`;
-    const location = "Your Location";
 
     // Format the date as required by .ics (YYYYMMDDTHHMMSSZ)
     function formatDate(date) {
