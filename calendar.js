@@ -1,12 +1,5 @@
-let scannedBarcode = '';
-let scannedProductt = null;
-
 function scheduleEvent() {
-
-    scannedBarcode = document.getElementById("scanned-barcode-value").textContent;
-
-    scannedProductt = barcodeDatabase.find(item => item.code === scannedBarcode);
-
+    
     const now = new Date();
     now.setMinutes(now.getMinutes() + 2);
 
