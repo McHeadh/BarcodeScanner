@@ -22,7 +22,7 @@ function scheduleEvent() {
     scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
 
     const now = new Date();
-    now.setMinutes(now.getMinutes() + scannedProduct.hoursdefrosting);
+    now.setMinutes(now.getMinutes() + 2);
 
     const title = "Time for donuts!";
     const description = `Scanned Barcode: ${scannedBarcode}`;
