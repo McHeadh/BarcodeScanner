@@ -1,19 +1,5 @@
-//let barcodeDatabase = [];
 let scannedBarcode = '';
 let scannedProductt = null;
-
-/*async function loadBarcodeData() {
-    try {
-        const response = await fetch('codes.json');
-        if (!response.ok) {
-            throw new Error("Failed to load barcode data");
-        }
-        barcodeDatabase = await response.json();
-        console.log(barcodeDatabase);
-    } catch (error) {
-        console.error('Error loading barcode data:', error);
-    }
-}*/
 
 function scheduleEvent() {
 
@@ -59,5 +45,3 @@ END:VCALENDAR
     link.click();
     document.body.removeChild(link);
 }
-
-//loadBarcodeData();
