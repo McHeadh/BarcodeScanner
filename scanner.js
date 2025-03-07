@@ -1,6 +1,8 @@
 let barcodeDatabase = [];
 let scannedBarcode = '';
+let scannedProduct = null; // Store product data for later use
 
+// Load barcode data from the file (codes.json)
 async function loadBarcodeData() {
     try {
         const response = await fetch('codes.json');
@@ -14,6 +16,7 @@ async function loadBarcodeData() {
     }
 }
 
+// Initialize the barcode scanner
 async function startScanner() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -48,15 +51,16 @@ async function startScanner() {
         scannedBarcode = result.codeResult.code;
         document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${scannedBarcode}</strong>`;
 
-        const product = barcodeDatabase.find(item => item.code === scannedBarcode);
-        
-        if (product) {
-            console.log("Product found:", product);
-            createEvent(product);
+        // Find the matching product from the barcode database
+        scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
+
+        if (scannedProduct) {
+            console.log("Product found:", scannedProduct);
         } else {
             console.log("Product not found in database");
         }
 
+        // Stop scanner and hide video stream
         Quagga.stop();
         document.getElementById("create-event-btn").style.display = "inline-block";
 
@@ -69,4 +73,5 @@ async function startScanner() {
     });
 }
 
+// Load barcode data when the page is ready
 loadBarcodeData();
