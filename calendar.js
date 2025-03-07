@@ -6,43 +6,43 @@ function logMessage(message) {
 logMessage("✅ Log system initialized.");
 
 function scheduleEvent() {
-    if (!scannedBarcode) {
-        logMessage("⚠️ No barcode scanned!"); // Show error on page
-        return;
-    }
+    logMessage("🟢 Button Clicked! Creating calendar event...");
 
-    logMessage("✅ Create Event button clicked.");
-    logMessage("📌 Scanned Barcode: " + scannedBarcode);
+    // Get the time for the event (2 minutes from now)
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 2); // Event in 2 minutes
 
-    const eventTitle = "Time for donuts";
+    const title = "Time for donuts!";
     const description = `Scanned Barcode: ${scannedBarcode}`;
     const location = "Your Location";
 
-    const startDate = new Date();
-    startDate.setMinutes(startDate.getMinutes() + 2);
-    const endDate = new Date(startDate);
-    endDate.setMinutes(endDate.getMinutes() + 30);
-
+    // Format the date as required by .ics (YYYYMMDDTHHMMSSZ)
     function formatDate(date) {
         return date.toISOString().replace(/-|:|\.\d+/g, "");
     }
 
+    // Event in .ics format
     const icsContent = `
 BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
-SUMMARY:${eventTitle}
+SUMMARY:${title}
 DESCRIPTION:${description}
 LOCATION:${location}
-DTSTART:${formatDate(startDate)}
-DTEND:${formatDate(endDate)}
+DTSTART:${formatDate(now)}
+DTEND:${formatDate(now)}  // The same start and end time for a fixed-time event
+BEGIN:VALARM
+TRIGGER:-PT0M  // The alarm triggers immediately (0 minutes before)
+DESCRIPTION:${title}
+ACTION:DISPLAY
+END:VALARM
 END:VEVENT
 END:VCALENDAR
     `.trim();
 
     logMessage("📅 Generating .ics file...");
-    logMessage("📄 ICS Content:\n" + icsContent);
 
+    // Create the blob and link to download the .ics file
     const blob = new Blob([icsContent], { type: "text/calendar" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -52,8 +52,9 @@ END:VCALENDAR
     link.click();
     document.body.removeChild(link);
 
-    logMessage("✅ .ics file should have downloaded.");
+    logMessage("✅ .ics file should have downloaded!");
 }
+
 
 
 
