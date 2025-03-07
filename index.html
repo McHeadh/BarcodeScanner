@@ -17,13 +17,11 @@
         let scannedBarcode = '';  // Store the scanned barcode number
 
         async function startScanner() {
-            // Ensure the camera is available
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: "environment" }
                 });
 
-                // Set the stream to the video element to display the camera feed
                 const videoElement = document.getElementById("barcode-video");
                 videoElement.srcObject = stream;
                 videoElement.play();
@@ -32,7 +30,6 @@
                 return;
             }
 
-            // Initialize Quagga to scan barcodes
             Quagga.init({
                 inputStream: {
                     name: "Live",
@@ -46,22 +43,17 @@
                     console.error(err);
                     return;
                 }
-                Quagga.start(); // Start barcode scanning
+                Quagga.start();
             });
 
-            // Handle barcode detection
             Quagga.onDetected(function (result) {
                 let barcode = result.codeResult.code;
-                scannedBarcode = barcode;  // Store the scanned barcode number
+                scannedBarcode = barcode;
                 document.getElementById("barcode-result").innerHTML = `Scanned Barcode: <strong>${barcode}</strong>`;
 
-                // ✅ Stop scanning immediately after detecting a barcode
                 Quagga.stop();
-
-                // ✅ Show the "Create an Event" button
                 document.getElementById("create-event-btn").style.display = "inline-block";
 
-                // Stop the camera stream
                 const videoElement = document.getElementById("barcode-video");
                 const videoStream = videoElement.srcObject;
                 if (videoStream) {
@@ -71,18 +63,25 @@
             });
         }
 
-        // Function to generate and download the ICS file for the event
         function createEvent() {
+            if (!scannedBarcode) {
+                alert("No barcode scanned!");
+                return;
+            }
+
             const eventTitle = "Time for donuts";
             const description = `Scanned Barcode: ${scannedBarcode}`;
-            const location = "Your Location";  // Add location if needed
-            const startDate = new Date();
-            startDate.setMinutes(startDate.getMinutes() + 2);  // Set the event time to 2 minutes later
-            const endDate = new Date(startDate);
-            endDate.setMinutes(endDate.getMinutes() + 30);  // Optional: Set event duration (e.g., 30 minutes)
+            const location = "Your Location";
 
-            const startDateString = startDate.toISOString().replace(/-|:|\.\d+/g, "");
-            const endDateString = endDate.toISOString().replace(/-|:|\.\d+/g, "");
+            // Set event start time to 2 minutes from now
+            const startDate = new Date();
+            startDate.setMinutes(startDate.getMinutes() + 2);
+            const endDate = new Date(startDate);
+            endDate.setMinutes(endDate.getMinutes() + 30);  // 30-minute event duration
+
+            function formatDate(date) {
+                return date.toISOString().replace(/-|:|\.\d+/g, "");
+            }
 
             const icsContent = `
 BEGIN:VCALENDAR
@@ -91,22 +90,21 @@ BEGIN:VEVENT
 SUMMARY:${eventTitle}
 DESCRIPTION:${description}
 LOCATION:${location}
-DTSTART:${startDateString}
-DTEND:${endDateString}
-BEGIN:VALARM
-TRIGGER:-PT10M  // Optional: Set reminder 10 minutes before event
-DESCRIPTION:Reminder for your event: ${eventTitle}
-ACTION:DISPLAY
-END:VALARM
+DTSTART:${formatDate(startDate)}
+DTEND:${formatDate(endDate)}
 END:VEVENT
 END:VCALENDAR
-            `;
+            `.trim();
 
             const blob = new Blob([icsContent], { type: 'text/calendar' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `event_time_for_donuts.ics`;
+            link.style.display = 'none';
+
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
