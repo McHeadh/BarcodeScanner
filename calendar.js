@@ -1,7 +1,7 @@
 function scheduleEvent() {
-    
+
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 2);
+    now.setHours(now.getHours() + scannedProduct.hoursdefrosting);
 
     const title = "Time for donuts!";
     const description = `Scanned Barcode: ${scannedBarcode}`;
