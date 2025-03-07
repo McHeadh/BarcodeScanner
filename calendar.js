@@ -1,45 +1,35 @@
-function scheduleEvent() {
-    // Get the time for the event (2 minutes from now)
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 2); // Event in 2 minutes
+function createEvent(product) {
+    const defrostingTime = product.hoursdefrosting;
+    const currentDate = new Date();
+    const eventTime = new Date(currentDate.getTime() + defrostingTime * 60 * 60 * 1000);
 
-    const title = "Time for donuts!";
-    const description = `Scanned Barcode: ${scannedBarcode}`;
-    const location = "Your Location";
-
-    // Format the date as required by .ics (YYYYMMDDTHHMMSSZ)
-    function formatDate(date) {
-        return date.toISOString().replace(/-|:|\.\d+/g, "");
-    }
-
-    // Event in .ics format
+    const eventStartDate = eventTime.toISOString().replace(/-|:|\.\d+/g, '');
+    const eventEndDate = new Date(eventTime.getTime() + 30 * 60 * 1000).toISOString().replace(/-|:|\.\d+/g, '');
     const icsContent = `
 BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
-SUMMARY:${title}
-DESCRIPTION:${description}
-DTSTART:${formatDate(now)}
-DTEND:${formatDate(now)}
+SUMMARY:Defrosting Time for ${product.name}
+DESCRIPTION:Barcode: ${product.code}
+DTSTART:${eventStartDate}
+DTEND:${eventEndDate}
+LOCATION:None
+STATUS:TENTATIVE
 BEGIN:VALARM
-TRIGGER:-PT0M
-DESCRIPTION:${title}
+TRIGGER:-PT10M
+DESCRIPTION:Reminder to check ${product.name}!
 ACTION:DISPLAY
 END:VALARM
 END:VEVENT
 END:VCALENDAR
-    `.trim();
+    `;
 
-    const blob = new Blob([icsContent], { type: "text/calendar" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "event_time_for_donuts.ics";
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
 
-    document.body.appendChild(link);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'defrosting-event.ics';
     link.click();
-    document.body.removeChild(link);
+    console.log("ICS event created and ready to be downloaded");
 }
-
-
-
-

@@ -1,0 +1,4 @@
+[
+    { "code": "8720181192128", "name": "Donut", "hoursdefrosting": 2, "hoursuntillexpired": 24 },
+    { "code": "5011898001012", "name": "Pizza", "hoursdefrosting": 3, "hoursuntillexpired": 48 }
+]
