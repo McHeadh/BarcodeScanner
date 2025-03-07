@@ -17,8 +17,6 @@ async function loadBarcodeData() {
 
 function scheduleEvent() {
 
-    loadBarcodeData();
-
     scannedBarcode = document.getElementById("scanned-barcode-value").textContent;
 
     scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
@@ -61,3 +59,5 @@ END:VCALENDAR
     link.click();
     document.body.removeChild(link);
 }
+
+loadBarcodeData();
