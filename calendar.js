@@ -30,11 +30,13 @@ END:VEVENT
 END:VCALENDAR
     `.trim();
 
+    console.log("Attempting to create and download .ics file...");
+    console.log(icsContent); // Debugging output
+
     const blob = new Blob([icsContent], { type: 'text/calendar' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `event_time_for_donuts.ics`;
-    link.style.display = 'none';
 
     document.body.appendChild(link);
     link.click();
