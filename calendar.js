@@ -5,7 +5,7 @@ function logMessage(message) {
 
 logMessage("✅ Log system initialized.");
 
-function createEvent() {
+function scheduleEvent() {
     if (!scannedBarcode) {
         logMessage("⚠️ No barcode scanned!"); // Show error on page
         return;
