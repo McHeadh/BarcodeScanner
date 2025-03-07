@@ -1,8 +1,8 @@
-let barcodeDatabase = [];
+//let barcodeDatabase = [];
 let scannedBarcode = '';
-let scannedProduct = null;
+let scannedProductt = null;
 
-async function loadBarcodeData() {
+/*async function loadBarcodeData() {
     try {
         const response = await fetch('codes.json');
         if (!response.ok) {
@@ -13,13 +13,13 @@ async function loadBarcodeData() {
     } catch (error) {
         console.error('Error loading barcode data:', error);
     }
-}
+}*/
 
 function scheduleEvent() {
 
     scannedBarcode = document.getElementById("scanned-barcode-value").textContent;
 
-    scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
+    scannedProductt = barcodeDatabase.find(item => item.code === scannedBarcode);
 
     const now = new Date();
     now.setMinutes(now.getMinutes() + 2);
@@ -60,4 +60,4 @@ END:VCALENDAR
     document.body.removeChild(link);
 }
 
-loadBarcodeData();
+//loadBarcodeData();
