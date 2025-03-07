@@ -1,7 +1,6 @@
 function logMessage(message) {
-    const logElement = document.createElement("p");
-    logElement.textContent = message;
-    document.body.appendChild(logElement);
+    const logElement = document.getElementById("logs");
+    logElement.innerHTML += "<br>➤ " + message;
 }
 
 function createEvent() {
