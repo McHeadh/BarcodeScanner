@@ -3,6 +3,8 @@ function logMessage(message) {
     logElement.innerHTML += "<br>➤ " + message;
 }
 
+logMessage("✅ Log system initialized.");
+
 function createEvent() {
     if (!scannedBarcode) {
         logMessage("⚠️ No barcode scanned!"); // Show error on page
@@ -53,5 +55,5 @@ END:VCALENDAR
     logMessage("✅ .ics file should have downloaded.");
 }
 
-logMessage("✅ Log system initialized.");
+
 
