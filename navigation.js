@@ -9,11 +9,11 @@ function toggleDarkMode() {
     // Change the icon based on the current mode
     if (body.classList.contains("dark-mode")) {
         // Switch to moon icon for dark mode
-        icon.classList.remove("fa-sun");
-        icon.classList.add("fa-moon");
-    } else {
-        // Switch to sun icon for light mode
         icon.classList.remove("fa-moon");
         icon.classList.add("fa-sun");
+    } else {
+        // Switch to sun icon for light mode
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
     }
 }
