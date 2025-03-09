@@ -19,11 +19,13 @@ async function loadBarcodeData() {
 // Initialize the barcode scanner
 async function startScanner() {
     try {
+        const videoElement = document.getElementById("barcode-video");
+        videoElement.style.display = "block"; // Show video when scanning starts
+
         const stream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "environment" }
         });
 
-        const videoElement = document.getElementById("barcode-video");
         videoElement.srcObject = stream;
         videoElement.play();
     } catch (err) {
@@ -51,15 +53,14 @@ async function startScanner() {
         scannedBarcode = result.codeResult.code;
 
         const barcodeContainer = document.getElementById("barcode-result");
-    
         barcodeContainer.innerHTML = "Scanned Barcode: ";
-    
+
         const barcodeValueElement = document.createElement("span");
         barcodeValueElement.id = "scanned-barcode-value";
         barcodeValueElement.textContent = scannedBarcode;
-    
+
         barcodeContainer.appendChild(barcodeValueElement);
-    
+
         scannedProduct = barcodeDatabase.find(item => item.code === scannedBarcode);
 
         if (scannedProduct) {
@@ -80,16 +81,11 @@ async function startScanner() {
             videoElement.srcObject = null;
         }
 
-        setTimeout(() => {
-            videoElement.remove(); // Remove the video element
-            const newVideoElement = document.createElement("video");
-            newVideoElement.id = "barcode-video";
-            newVideoElement.style.width = "100%";
-            newVideoElement.style.maxWidth = "400px";
-            document.body.appendChild(newVideoElement);
-        }, 100);
+        // Hide video instead of removing it
+        videoElement.style.display = "none";
     });
 }
+
 
 function createDefrostingTable(product) {
     const now = new Date();
