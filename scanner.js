@@ -103,7 +103,11 @@ function createDefrostingTable(product) {
     expirationDate.setMinutes(expirationDate.getMinutes() + product.hoursuntillexpired * 60);
 
     function formatDate(date) {
-        return date.toLocaleDateString("pl-PL");
+        return date.toLocaleDateString("pl-PL", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
     }
 
     function formatTime(date) {
