@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner & Event Creator</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <h1>Scan a Barcode</h1>
@@ -14,7 +15,9 @@
     <button id="create-event-btn" style="display: none;" onclick="scheduleEvent()">Create an Event in Calendar</button>
     
     <!-- Dark mode toggle button -->
-    <button id="toggle-darkmode" onclick="toggleDarkMode()">Switch to Dark Mode</button>
+    <button id="toggle-darkmode" onclick="toggleDarkMode()">
+        <i class="fas fa-sun"></i> <!-- Sun icon for light mode -->
+    </button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="scanner.js"></script>

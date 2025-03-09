@@ -76,6 +76,24 @@ th {
 }
 
 /* Dark mode styles */
+
+#toggle-darkmode {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.3s;
+}
+
+#toggle-darkmode:hover {
+    color: #007bff;
+}
+
+#toggle-darkmode i {
+    transition: transform 0.3s ease;
+}
+
 .dark-mode {
     background-color: #121212;
     color: #ddd;
