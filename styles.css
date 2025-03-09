@@ -27,6 +27,11 @@ button:hover {
 video {
     border: 2px solid #007bff;
     border-radius: 5px;
+    width: 100%;  /* Adjust this to the width you desire */
+    max-width: 400px; /* Limit the maximum width */
+    height: auto;  /* Maintain aspect ratio */
+    display: none;  /* Initially hide the video element */
+    object-fit: contain; /* Ensures the video is contained within the element, maintaining its aspect ratio */
 }
 
 #barcode-result {
