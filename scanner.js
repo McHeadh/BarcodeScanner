@@ -96,14 +96,18 @@ function createDefrostingTable(product) {
 
     // First row: current date + defrosting time
     const defrostingDate = new Date(now);
-    defrostingDate.setHours(defrostingDate.getHours() + product.hoursdefrosting);
+    defrostingDate.setMinutes(defrostingDate.getMinutes() + product.hoursdefrosting * 60);
 
-    // Second row: current date + expiration time
+    // Second row: defrosting completed + expiration time
     const expirationDate = new Date(defrostingDate);
-    expirationDate.setHours(expirationDate.getHours() + product.hoursuntillexpired);
+    expirationDate.setMinutes(expirationDate.getMinutes() + product.hoursuntillexpired * 60);
 
-    function formatDateTime(date) {
-        return date.toLocaleDateString("pl-PL") + " " + date.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+    function formatDate(date) {
+        return date.toLocaleDateString("pl-PL");
+    }
+
+    function formatTime(date) {
+        return date.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
     }
 
     // Remove old table if it exists
@@ -117,18 +121,25 @@ function createDefrostingTable(product) {
     table.id = "defrosting-table";
     table.border = "1";
 
-    // Create rows
-    const row1 = table.insertRow();
-    row1.insertCell(0).textContent = formatDateTime(defrostingDate); // First row, first column
-    row1.insertCell(1).textContent = "Defrosting Completed";
+    // Create header row
+    const headerRow = table.insertRow();
+    headerRow.insertCell(0).textContent = "Date";
+    headerRow.insertCell(1).textContent = "Time";
 
+    // Create first row (defrosting completed)
+    const row1 = table.insertRow();
+    row1.insertCell(0).textContent = formatDate(defrostingDate);
+    row1.insertCell(1).textContent = formatTime(defrostingDate);
+
+    // Create second row (expiration time)
     const row2 = table.insertRow();
-    row2.insertCell(0).textContent = formatDateTime(expirationDate); // Second row, first column
-    row2.insertCell(1).textContent = "Expires";
+    row2.insertCell(0).textContent = formatDate(expirationDate);
+    row2.insertCell(1).textContent = formatTime(expirationDate);
 
     // Append table to barcode result container
     document.getElementById("barcode-result").appendChild(table);
 }
+
 
 // Load barcode data when the page is ready
 loadBarcodeData();
