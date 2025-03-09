@@ -84,6 +84,11 @@ th {
     cursor: pointer;
     padding: 10px;
     transition: color 0.3s;
+
+    position: fixed;
+    top: 20px; /* Adjust top position */
+    right: 20px; /* Adjust right position */
+    z-index: 1000; /* Ensure the button stays on top of other elements */
 }
 
 #toggle-darkmode:hover {
