@@ -1,8 +1,10 @@
+/* Light mode styles (default) */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f4f4f4;
     padding: 20px;
+    color: #333;
 }
 
 h1, h3 {
@@ -71,4 +73,45 @@ th {
     font-size: 14px;
     color: #555;
     margin-top: 10px;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #121212;
+    color: #ddd;
+}
+
+.dark-mode h1, .dark-mode h3 {
+    color: #f0f0f0;
+}
+
+.dark-mode button {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode button:hover {
+    background-color: #333;
+}
+
+.dark-mode video {
+    border: 2px solid #444;
+}
+
+.dark-mode #barcode-result {
+    background: #333;
+    color: #fff;
+}
+
+.dark-mode table {
+    background: #333;
+}
+
+.dark-mode th {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode #defrosting-info {
+    color: #ccc;
 }

@@ -12,9 +12,13 @@
     <video id="barcode-video" playsinline style="width: 100%; max-width: 400px; display: none;"></video>
     <p id="barcode-result">Scanned Barcode: <strong>None</strong></p>
     <button id="create-event-btn" style="display: none;" onclick="scheduleEvent()">Create an Event in Calendar</button>
+    
+    <!-- Dark mode toggle button -->
+    <button id="toggle-darkmode" onclick="toggleDarkMode()">Switch to Dark Mode</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="scanner.js"></script>
     <script src="calendar.js"></script>
+    <script src="navigation.js"></script>
 </body>
 </html>
