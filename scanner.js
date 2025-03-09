@@ -110,11 +110,23 @@ function createDefrostingTable(product) {
         return date.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
     }
 
-    // Remove old table if it exists
+    const barcodeContainer = document.getElementById("barcode-result");
+
+    // Remove old elements if they exist
     const existingTable = document.getElementById("defrosting-table");
-    if (existingTable) {
-        existingTable.remove();
-    }
+    if (existingTable) existingTable.remove();
+
+    const existingProductName = document.getElementById("product-name");
+    if (existingProductName) existingProductName.remove();
+
+    const existingInfo = document.getElementById("defrosting-info");
+    if (existingInfo) existingInfo.remove();
+
+    // Create product name heading
+    const productName = document.createElement("h3");
+    productName.id = "product-name";
+    productName.textContent = `Product: ${product.name}`;
+    barcodeContainer.appendChild(productName);
 
     // Create table
     const table = document.createElement("table");
@@ -136,9 +148,15 @@ function createDefrostingTable(product) {
     row2.insertCell(0).textContent = formatDate(expirationDate);
     row2.insertCell(1).textContent = formatTime(expirationDate);
 
-    // Append table to barcode result container
-    document.getElementById("barcode-result").appendChild(table);
+    barcodeContainer.appendChild(table);
+
+    // Create info below the table
+    const defrostingInfo = document.createElement("p");
+    defrostingInfo.id = "defrosting-info";
+    defrostingInfo.innerHTML = `Defrosting time: <b>${product.hoursdefrosting} hours</b><br>Expiration after defrosting: <b>${product.hoursuntillexpired} hours</b>`;
+    barcodeContainer.appendChild(defrostingInfo);
 }
+
 
 
 // Load barcode data when the page is ready
