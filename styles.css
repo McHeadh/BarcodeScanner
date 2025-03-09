@@ -24,6 +24,11 @@ button:hover {
     background-color: #0056b3;
 }
 
+video {
+    border: 2px solid #007bff;
+    border-radius: 5px;
+}
+
 #barcode-result {
     background: white;
     padding: 15px;
