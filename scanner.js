@@ -64,6 +64,7 @@ async function startScanner() {
 
         if (scannedProduct) {
             console.log("Product found:", scannedProduct);
+            createDefrostingTable(scannedProduct);
         } else {
             console.log("Product not found in database");
         }
@@ -88,6 +89,45 @@ async function startScanner() {
             document.body.appendChild(newVideoElement);
         }, 100);
     });
+}
+
+function createDefrostingTable(product) {
+    const now = new Date();
+
+    // First row: current date + defrosting time
+    const defrostingDate = new Date(now);
+    defrostingDate.setHours(defrostingDate.getHours() + product.hoursdefrosting);
+
+    // Second row: current date + expiration time
+    const expirationDate = new Date(defrostingDate);
+    expirationDate.setHours(expirationDate.getHours() + product.hoursuntillexpired);
+
+    function formatDateTime(date) {
+        return date.toLocaleDateString("pl-PL") + " " + date.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    // Remove old table if it exists
+    const existingTable = document.getElementById("defrosting-table");
+    if (existingTable) {
+        existingTable.remove();
+    }
+
+    // Create table
+    const table = document.createElement("table");
+    table.id = "defrosting-table";
+    table.border = "1";
+
+    // Create rows
+    const row1 = table.insertRow();
+    row1.insertCell(0).textContent = formatDateTime(defrostingDate); // First row, first column
+    row1.insertCell(1).textContent = "Defrosting Completed";
+
+    const row2 = table.insertRow();
+    row2.insertCell(0).textContent = formatDateTime(expirationDate); // Second row, first column
+    row2.insertCell(1).textContent = "Expires";
+
+    // Append table to barcode result container
+    document.getElementById("barcode-result").appendChild(table);
 }
 
 // Load barcode data when the page is ready
